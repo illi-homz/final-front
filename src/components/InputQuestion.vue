@@ -97,13 +97,14 @@ export default {
       if (!this.form.question || !this.form.answer) {
         this.noValid = true;
       } else {
+        this.noValid = false;
         axios.post(`${BASE_URL}/questions/`, this.form)
           .then((response) => {
-            console.log(response);
+            if (response.status === 201) {
+              this.$emit('created');
+              this.$emit('qClean', 'input');
+            }
           });
-
-        this.$emit('created');
-        this.$emit('qClean', 'input');
       }
     },
     imgInputClick() {

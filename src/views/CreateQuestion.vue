@@ -17,7 +17,7 @@
               <b-button @click="changeQ('input')" class="mx-1" variant="success">
                 С полем для ввода
               </b-button>
-              <b-button @click="ifCreated" class="mx-1" variant="success">
+              <b-button @click="changeQ('check')" class="mx-1" variant="success">
                 Несколько вариантов
               </b-button>
               <b-button @click="changeQ('radio')" class="mx-1" variant="success">
@@ -40,6 +40,7 @@
 
 <script>
 import InputQuestion from '@/components/InputQuestion.vue';
+import CheckQuestion from '@/components/CheckQuestion.vue';
 import RadioQuestion from '@/components/RadioQuestion.vue';
 
 export default {
@@ -51,7 +52,7 @@ export default {
     };
   },
   components: {
-    InputQuestion, RadioQuestion,
+    InputQuestion, CheckQuestion, RadioQuestion,
   },
   methods: {
     changeQ(q) {

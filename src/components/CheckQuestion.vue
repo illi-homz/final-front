@@ -44,14 +44,15 @@
                   <p class="mb-0" for="answer"><b>Ответы</b></p>
                 </b-col>
                 <b-col>
-                  <div v-for="(radio, index) in radios" v-bind:key="index" class="mb-1">
-                    <input v-model="selected" :value="`${radio.value}`" type="radio">
+                  <div v-for="(check, index) in checks" v-bind:key="index" class="mb-1">
+                    <input v-model="selected" :value="`${check.value}`" type="checkbox">
                     <input
-                    v-model="radio.value"
+                    v-model="check.value"
                     class="ml-2 w-75"
                     type="text"
                     :placeholder="`Введите ответ № ${index + 1}`">
                   </div>
+                  <p style="color: #eee;"><em>Не забудь выбрать верные варианты</em></p>
                 </b-col>
               </b-row>
 
@@ -100,41 +101,41 @@ import axios from 'axios';
 const BASE_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
-  name: 'InputQuestion',
+  name: 'CheckQuestion',
   data() {
     return {
       form: {},
       img: '',
-      selected: '',
       noValid: false,
-      radios: [
+      selected: [],
+      checks: [
         { value: '' },
       ],
     };
   },
   methods: {
     addAnswer() {
-      this.radios.push({ value: '' });
+      this.checks.push({ value: '' });
     },
     delLastAnswer() {
-      this.radios.pop();
+      this.checks.pop();
     },
     onSubmit() {
       const formElemenst = this.$refs.form.elements;
-      this.form.qtype = 'radio';
+      this.form.qtype = 'checkbox';
       this.form.question = formElemenst.question.value;
-      this.form.variants = JSON.stringify(this.radios);
-      this.form.answer = this.selected;
+      this.form.variants = JSON.stringify(this.checks);
+      this.form.answer = JSON.stringify(this.selected);
       this.form.img = this.img;
 
-      for (let i = 0; i < this.radios.length; i += 1) {
-        if (this.radios[i].value === '') {
+      for (let i = 0; i < this.checks.length; i += 1) {
+        if (this.checks[i].value === '') {
           this.noValid = true;
           return;
         }
       }
 
-      if (!this.form.question || !this.selected) {
+      if (!this.form.question || this.form.answer === '[]') {
         this.noValid = true;
       } else {
         this.noValid = false;
