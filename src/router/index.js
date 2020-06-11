@@ -34,6 +34,12 @@ const routes = [
     meta: { title: 'Создание вопросов', layout: 'main' },
     component: () => import('@/views/CreateQuestion.vue'),
   },
+  {
+    path: '/create-test',
+    name: 'CreateTest',
+    meta: { title: 'Создание теста', layout: 'main' },
+    component: () => import('@/views/CreateTest.vue'),
+  },
 ];
 
 const router = new VueRouter({
