@@ -13,7 +13,8 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
 Vue.config.productionTip = false;
-Vue.filter('formatDate', (value) => moment(String(value)).format('DD-MM-YYYY'));
+Vue.filter('formatDate', (value) => moment(String(value)).format('DD.MM.YYYY'));
+Vue.filter('formatDateTime', (value) => moment(String(value)).format('HH:mm DD.MM.YYYY'));
 
 new Vue({
   router,

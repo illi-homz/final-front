@@ -35,10 +35,22 @@ const routes = [
     component: () => import('@/views/CreateQuestion.vue'),
   },
   {
+    path: '/create-qroup-questions',
+    name: 'CreateGroupQuestion',
+    meta: { title: 'Создание групп вопросов', layout: 'main' },
+    component: () => import('@/views/CreateGroupQuestions.vue'),
+  },
+  {
     path: '/create-test',
     name: 'CreateTest',
     meta: { title: 'Создание теста', layout: 'main' },
     component: () => import('@/views/CreateTest.vue'),
+  },
+  {
+    path: '/results/:id',
+    name: 'Results',
+    meta: { title: 'Результаты теста', layout: 'main' },
+    component: () => import('@/views/Results.vue'),
   },
 ];
 

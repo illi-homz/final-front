@@ -30,10 +30,17 @@
       shadow>
         <div class="px-0 py-2">
           <b-list-group id="list-group">
-              <b-list-group-item variant="dark" to="/ddd">Button item</b-list-group-item>
-              <b-list-group-item variant="dark" to="/ddd">I am a button</b-list-group-item>
-              <b-list-group-item variant="dark" to="/ddd">Disabled button</b-list-group-item>
-              <b-list-group-item variant="dark" to="/ddd">This is a button too</b-list-group-item>
+              <b-list-group-item variant="dark" to="/create-test">Создать тест</b-list-group-item>
+              <b-list-group-item variant="dark" to="/create-question">
+                Создать вопросы
+              </b-list-group-item>
+              <b-list-group-item variant="dark" to="/create-qroup-questions">
+                Создать группу вопросов
+              </b-list-group-item>
+              <b-list-group-item variant="dark" to="/test-list">Список тестов</b-list-group-item>
+              <b-list-group-item variant="dark" to="/contact-us">
+                Связаться с нами
+              </b-list-group-item>
             </b-list-group>
         </div>
       </b-sidebar>

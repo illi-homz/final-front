@@ -14,10 +14,10 @@
 
           <b-row class="text-center">
             <b-col>
-              <b-button @click="changeQ('questions')" class="mx-1" variant="success">
+              <b-button @click="changeTest('questions')" class="mx-1" variant="success">
                 Из отдельных вопросов
               </b-button>
-              <b-button @click="changeQ('groups')" class="mx-1" variant="success">
+              <b-button @click="changeTest('groups')" class="mx-1" variant="success">
                 Из групп вопросов
               </b-button>
             </b-col>
@@ -26,9 +26,10 @@
 
         <hr class="my-4">
 
-        <h4 v-if="created" class="text-center text-danger">Вопрос создан</h4>
+        <h1 v-if="created" class="text-center text-danger">Тест создан</h1>
 
-        <component v-if="q" @qClean="changeQ(q)" :is="qestion"></component>
+        <component v-if="t" @testClean="changeTest(t)" @created="ifCreated" :is="test">
+        </component>
 
       </b-jumbotron>
     </div>
@@ -42,7 +43,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      q: '',
+      t: '',
       created: false,
     };
   },
@@ -50,17 +51,24 @@ export default {
     TestFromQuestions,
   },
   methods: {
-    changeQ(q) {
-      if (this.q === q) {
-        this.q = '';
+    changeTest(t) {
+      if (this.t === t) {
+        this.t = '';
       } else {
-        this.q = q;
+        this.t = t;
       }
+    },
+    changeCreated() {
+      this.created = !this.created;
+    },
+    ifCreated() {
+      this.changeCreated();
+      setTimeout(() => { this.changeCreated(); }, 2 * 1000);
     },
   },
   computed: {
-    qestion() {
-      return `test-from-${this.q}`;
+    test() {
+      return `test-from-${this.t}`;
     },
   },
 };

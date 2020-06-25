@@ -125,6 +125,12 @@ export default {
       this.form.qtype = 'checkbox';
       this.form.question = formElemenst.question.value;
       this.form.variants = JSON.stringify(this.checks);
+
+      for (let i = 0; i < this.selected.length; i += 1) {
+        if (!this.selected[i]) {
+          this.selected.pop(i);
+        }
+      }
       this.form.answer = JSON.stringify(this.selected);
       this.form.img = this.img;
 
@@ -162,7 +168,6 @@ export default {
       };
       axios.post(`${BASE_URL}/images/`, data, config)
         .then((response) => {
-          console.log(response);
           this.img = response.data.file;
         });
     },

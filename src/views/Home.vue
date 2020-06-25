@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <div>
-      <b-jumbotron>
+      <b-jumbotron
+      class="w-75 mx-auto mt-2">
         <template v-slot:header>BootstrapVue</template>
 
         <template v-slot:lead>
