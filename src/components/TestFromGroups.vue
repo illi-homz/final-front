@@ -1,8 +1,8 @@
 <template>
-  <div class="test-from-questions">
+  <div class="test-from-groups">
     <b-row class="text-center">
       <b-col>
-        <h3>Создание теста из отдельных вопросов</h3>
+        <h3>Создание теста из групп вопросов</h3>
       </b-col>
     </b-row>
     <b-row>
@@ -120,27 +120,27 @@
 
             <b-row class="mb-1">
               <b-col cols="3">
-                <p class="mb-0">Вопросы</p>
+                <p class="mb-0">Группы</p>
                 <em style="font-size: 8pt;">
-                  (Выберите вопросы, укажите баллы за каждый вопрос)
+                  (Выберите группы, укажите баллы)
                 </em>
               </b-col>
               <b-col>
                 <h6 v-if="totalPrice" class="text-center">
                   Всего баллов за тест: {{ totalPrice }}
                 </h6>
-                <b-row v-for="(qit, index) in questionsInTest" v-bind:key="index">
+                <b-row v-for="(git, index) in groupsInTest" v-bind:key="index">
                   <b-col>
                     <b-row align-v="center">
                       <b-col cols="9" class="pr-0">
                         <b-form-select
-                          v-model="qit.question"
+                          v-model="git.group"
                           class="mb-2">
                           <b-form-select-option
-                            v-for="q in questions"
-                            v-bind:key="q.id"
-                            :value="`${q.id}`">
-                            {{ q.question }}
+                            v-for="g in groups"
+                            v-bind:key="g.id"
+                            :value="`${g.id}`">
+                            {{ g.title }}
                           </b-form-select-option>
                         </b-form-select>
                       </b-col>
@@ -148,14 +148,14 @@
                         <b-form-input
                           type="number"
                           style="width: 100%"
-                          v-model="qit.price"
+                          v-model="git.price"
                           value="0"
                           class="mb-2"></b-form-input>
                       </b-col>
                       <b-col cols="1" class="mx-0 px-0">
                         <b-button
                           class="mb-2"
-                          @click="delQuestion(index)"
+                          @click="delGroup(index)"
                           variant="danger"
                           size="sm">X</b-button>
                       </b-col>
@@ -170,7 +170,7 @@
                     <b-row>
                       <b-col>
                         <b-row class="px-3">
-                          <b-button @click="addQuestion" variant="primary">
+                          <b-button @click="addGroup" variant="primary">
                             Добавить вопрос
                           </b-button>
                           <b-button class="ml-auto" @click="createTest" variant="danger">
@@ -198,10 +198,9 @@ import axios from 'axios';
 const BASE_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
-  name: 'TestFromQuestions',
+  name: 'TestFromGroups',
   data() {
     return {
-      // totalPrice: 0,
       title: '',
       about: '',
       start_date: '',
@@ -210,10 +209,10 @@ export default {
       selected: [],
       image: null,
       selectedUsers: [],
-      questions: [],
-      questionsInTest: [
+      groups: [],
+      groupsInTest: [
         {
-          question: 'placeholder',
+          group: 'placeholder',
           price: '0',
         },
       ],
@@ -233,14 +232,14 @@ export default {
       };
       return config;
     },
-    getQuestionsAndUsers() {
+    getGroupsAndUsers() {
       const config = this.setConfig();
-      axios.get(`${BASE_URL}/questions/`, config)
+      axios.get(`${BASE_URL}/group-questions/`, config)
         .then((response) => {
-          this.questions = response.data;
-          this.questions.push({
+          this.groups = response.data;
+          this.groups.push({
             id: 'placeholder',
-            question: 'Выберите вопрос',
+            title: 'Выберите группу',
           });
         });
       axios.get(`${BASE_URL}/users/`, config)
@@ -253,22 +252,22 @@ export default {
           }
         });
     },
-    delQuestion(id) {
-      if (this.questionsInTest.length > 1) {
-        this.questionsInTest.splice(id, 1);
+    delGroup(id) {
+      if (this.groupsInTest.length > 1) {
+        this.groupsInTest.splice(id, 1);
       }
     },
-    addQuestion() {
-      this.questionsInTest.push({
-        question: 'placeholder',
+    addGroup() {
+      this.groupsInTest.push({
+        group: 'placeholder',
         price: '0',
       });
     },
     createTest() {
-      if (this.questionsInTest.length > 1) {
-        for (let i = 0; i < this.questionsInTest.length; i += 1) {
-          if (this.questionsInTest[i].question === 'placeholder') {
-            this.questionsInTest.splice(i, 1);
+      if (this.groupsInTest.length > 1) {
+        for (let i = 0; i < this.groupsInTest.length; i += 1) {
+          if (this.groupsInTest[i].group === 'placeholder') {
+            this.groupsInTest.splice(i, 1);
           }
         }
       }
@@ -279,7 +278,7 @@ export default {
         || !this.end_date
         || !this.time_on_question
         || !this.selectedUsers
-        || !this.questionsInTest
+        || !this.groupsInTest
       ) {
         this.error = 1;
         return undefined;
@@ -299,33 +298,32 @@ export default {
         start_date: this.start_date,
         end_date: this.end_date,
         time_on_question: this.time_on_question,
-        questions: [],
+        groups: [],
         tested_users: this.selectedUsers,
-        img: '',
       };
 
       const config = this.setConfig();
 
       const d = [];
-      for (let i = 0; i < this.questionsInTest.length; i += 1) {
+      for (let i = 0; i < this.groupsInTest.length; i += 1) {
         d.push({
-          question: this.questionsInTest[i].question,
-          price: this.questionsInTest[i].price,
+          group: this.groupsInTest[i].group,
+          price: this.groupsInTest[i].price,
         });
       }
 
-      axios.post(`${BASE_URL}/questions-in-tests/`, d, config)
+      axios.post(`${BASE_URL}/groups-in-tests/`, d, config)
         .then((response) => {
           for (let i = 0; i < response.data.length; i += 1) {
-            data.questions.push(response.data[i].id);
+            data.groups.push(response.data[i].id);
           }
 
           if (this.image) {
             const formData = new FormData();
             formData.append('file', this.image);
-            const conf = this.setConfig();
-            conf.headers['Content-Type'] = 'multipart/form-data';
-            axios.post(`${BASE_URL}/images/`, formData, conf)
+            const configForImage = this.setConfig();
+            configForImage.headers['Content-Type'] = 'multipart/form-data';
+            axios.post(`${BASE_URL}/images/`, formData, configForImage)
               .then((r) => {
                 data.img = r.data.file;
 
@@ -351,23 +349,25 @@ export default {
               });
           }
         });
+
       return 'hello';
     },
   },
   computed: {
     totalPrice() {
       let total = 0;
-      for (let i = 0; i < this.questionsInTest.length; i += 1) {
-        total += Number(this.questionsInTest[i].price);
+      for (let i = 0; i < this.groupsInTest.length; i += 1) {
+        total += Number(this.groupsInTest[i].price);
       }
       return total;
     },
   },
   mounted() {
-    this.getQuestionsAndUsers();
+    this.getGroupsAndUsers();
   },
 };
 </script>
 
 <style>
+
 </style>

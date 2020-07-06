@@ -1,101 +1,119 @@
 <template>
   <div class="gotest">
-    <div>
-      <b-row class="mx-auto w-75">
-        <b-col class="px-0" cols="8">
-          <h2 class="text-left mt-2">
-            Всего баллов: <b>{{ totalPoints }}</b> Набрано Вами: <b>{{ userPoints }}</b>
-          </h2>
-        </b-col>
-        <b-col class="px-0">
-          <h2  class="text-right mt-2">
-            Время на вопрос: <b>{{ timeOnQuestion }}</b>
-          </h2>
-        </b-col>
-      </b-row>
-      <p v-if="!test"> loading.....</p>
-      <b-jumbotron
-        class="w-75 mx-auto mt-1 py-3"
-        bg-variant="info"
-        border-variant="dark"
-        v-else>
-        <b-row class="my-3">
-          <b-col>
-            <b-card no-body>
-              <b-tabs pills card>
-                <b-tab
-                  v-for="(q, index) in questions"
-                  v-bind:key="q.id"
-                  :title="`Вопрос ${index + 1}`"
-                  :disabled="disabledQuestions[index]"
-                  >
-                  <h2 v-if="result == 1" class="text-center text-success">ВЕРНО</h2>
-                  <h2 v-else-if="result == 2" class="text-center text-danger">НЕ ВЕРНО</h2>
-                  <h2 v-else-if="result == 3" class="text-center text-danger">ВРЕМЯ ВЫШЛО</h2>
-                  <b-card-text>{{ q.question.question }}</b-card-text>
-                  <b-card-text>
-
-                    <b-form v-on:submit.prevent>
-                      <b-row v-if="q.question.qtype == 'input'" class="mb-4">
-                        <b-col>
-                          <b-form-input
-                            v-model="results[index].answer"
-                            placeholder="Введите ответ"></b-form-input>
-                        </b-col>
-                      </b-row>
-
-                      <b-row v-else-if="q.question.qtype == 'checkbox'" class="mb-4">
-                        <b-col
-                          v-if="q.question.img"
-                          cols="4">
-                          <b-img
-                            :src="`${q.question.img}`"
-                            fluid
-                            alt="Responsive image"></b-img>
-                        </b-col>
-                        <b-col>
-                          <b-form-checkbox
-                            v-for="(q, i) in q.question.variants"
-                            v-bind:key="i"
-                            v-model="results[index].answer"
-                            :value="`${q.value}`">
-                            {{ q.value }}
-                          </b-form-checkbox>
-                        </b-col>
-                      </b-row>
-
-                      <b-row v-else-if="q.question.qtype == 'radio'" class="mb-4">
-                        <b-col>
-                          <b-form-radio
-                            v-for="(q, i) in q.question.variants"
-                            v-bind:key="i"
-                            v-model="results[index].answer"
-                            :value="`${q.value}`">
-                            {{ q.value }}
-                          </b-form-radio>
-                        </b-col>
-                      </b-row>
-
-                      <b-button
-                        @click="onSubmit(index, q.question.qtype)"
-                        type="submit"
-                        variant="success">Ответить</b-button>
-                    </b-form>
-                  </b-card-text>
-                </b-tab>
-              </b-tabs>
-            </b-card>
+    <b-row>
+      <b-col cols="11" xl="9" class="mx-auto">
+        <b-row class="mx-3">
+          <b-col class="px-0" cols="8">
+            <h4 class="text-left mt-2">
+              Всего баллов: <b>{{ totalPoints }}</b> Набрано Вами: <b>{{ userPoints }}</b>
+            </h4>
+          </b-col>
+          <b-col class="px-0">
+            <h4  class="text-right mt-2">
+              Время на вопрос: <b>{{ timeOnQuestion }}</b>
+            </h4>
           </b-col>
         </b-row>
-      </b-jumbotron>
-    </div>
+        <p v-if="!test"> loading.....</p>
+        <b-jumbotron
+          class="mx-3 mt-1 py-3"
+          bg-variant="info"
+          border-variant="dark"
+          v-else>
+          <b-row class="my-3">
+            <b-col>
+              <b-card no-body>
+                <b-tabs pills card>
+                  <b-tab
+                    v-for="(q, index) in questions"
+                    v-bind:key="q.id"
+                    :title="`Вопрос ${index + 1}`"
+                    :disabled="disabledQuestions[index]"
+                    >
+                    <h2 v-if="result == 1" class="text-center text-success">ВЕРНО</h2>
+                    <h2 v-else-if="result == 2" class="text-center text-danger">НЕ ВЕРНО</h2>
+                    <h2 v-else-if="result == 3" class="text-center text-danger">ВРЕМЯ ВЫШЛО</h2>
+                    <b-card-text>{{ q.question.question }}</b-card-text>
+                    <b-card-text>
+
+                      <b-form v-on:submit.prevent>
+                        <b-row v-if="q.question.qtype == 'input'" class="mb-4">
+                          <b-col
+                            v-if="q.question.img"
+                            cols="3">
+                            <b-img
+                              :src="`${q.question.img}`"
+                              fluid
+                              alt="Responsive image"></b-img>
+                          </b-col>
+                          <b-col>
+                            <b-form-input
+                              v-model="results[index].answer"
+                              placeholder="Введите ответ"></b-form-input>
+                          </b-col>
+                        </b-row>
+
+                        <b-row v-else-if="q.question.qtype == 'checkbox'" class="mb-4">
+                          <b-col
+                            v-if="q.question.img"
+                            cols="3">
+                            <b-img
+                              :src="`${q.question.img}`"
+                              fluid
+                              alt="Responsive image"></b-img>
+                          </b-col>
+                          <b-col>
+                            <b-form-checkbox
+                              v-for="(q, i) in q.question.variants"
+                              v-bind:key="i"
+                              v-model="results[index].answer"
+                              :value="`${q.value}`">
+                              {{ q.value }}
+                            </b-form-checkbox>
+                          </b-col>
+                        </b-row>
+
+                        <b-row v-else-if="q.question.qtype == 'radio'" class="mb-4">
+                          <b-col
+                            v-if="q.question.img"
+                            cols="3">
+                            <b-img
+                              :src="`${q.question.img}`"
+                              fluid
+                              alt="Responsive image"></b-img>
+                          </b-col>
+                          <b-col>
+                            <b-form-radio
+                              v-for="(q, i) in q.question.variants"
+                              v-bind:key="i"
+                              v-model="results[index].answer"
+                              :value="`${q.value}`">
+                              {{ q.value }}
+                            </b-form-radio>
+                          </b-col>
+                        </b-row>
+
+                        <b-button
+                          @click="onSubmit(index, q.question.qtype)"
+                          type="submit"
+                          variant="success">Ответить</b-button>
+                      </b-form>
+                    </b-card-text>
+                  </b-tab>
+                </b-tabs>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-jumbotron>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8080';
+const BASE_API_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
   name: 'GoTest',
@@ -113,9 +131,20 @@ export default {
       timeOnQuestion: 0,
       interval: null,
       currentIndex: 0,
+      userID: 0,
     };
   },
   methods: {
+    setConfig() {
+      const jwt = this.$cookies.get('jwt_token');
+      const config = {
+        headers: {
+          'X-CSRFToken': this.$cookies.get('csrftoken'),
+          Authorization: `Bearer ${jwt}`,
+        },
+      };
+      return config;
+    },
     questionTimer() {
       this.interval = setInterval(() => {
         if (this.timeOnQuestion > 0) {
@@ -131,7 +160,7 @@ export default {
     checkInput(question, id) {
       const q = question;
       this.results.push({
-        // user: '',
+        user: this.userID,
         answer: '',
         question: id,
       });
@@ -141,7 +170,7 @@ export default {
       const q = question;
       q.variants = JSON.parse(q.variants);
       this.results.push({
-        // user: '',
+        user: this.userID,
         answer: '',
         question: id,
       });
@@ -152,34 +181,47 @@ export default {
       q.answer = JSON.parse(q.answer);
       q.variants = JSON.parse(q.variants);
       this.results.push({
-        // user: '',
+        user: this.userID,
         answer: [],
         question: id,
       });
       return q;
     },
     getTest() {
+      const config = this.setConfig();
       const id = `${this.$route.params.id}`;
-      axios.get(`${BASE_API_URL}/tests/${id}/`)
+      axios.get(`${BASE_API_URL}/tests/${id}/`, config)
         .then((response) => {
-          // console.log(response.data);
           this.test = response.data;
           this.timeOnQuestion = this.test.time_on_question;
-          // this.timeOnQuestion = 2;
 
-          this.questions = response.data.questions;
+          if (this.test.groups.length > 0) {
+            for (let i = 0; i < this.test.groups.length; i += 1) {
+              const groupInTest = this.test.groups[i];
+              for (let j = 0; j < groupInTest.group.questions.length; j += 1) {
+                this.questions.push({
+                  id: groupInTest.id,
+                  price: groupInTest.price,
+                  question: groupInTest.group.questions[j],
+                });
+              }
+            }
+          } else {
+            this.questions = response.data.questions;
+          }
+
           for (let i = 0; i < this.questions.length; i += 1) {
             const q = this.questions[i];
 
             switch (q.question.qtype) {
               case 'input':
-                q.question = this.checkInput(q.question, q.id);
+                q.question = this.checkInput(q.question, q.question.id);
                 break;
               case 'radio':
-                q.question = this.checkRaio(q.question, q.id);
+                q.question = this.checkRaio(q.question, q.question.id);
                 break;
               case 'checkbox':
-                q.question = this.checkCheckbox(q.question, q.id);
+                q.question = this.checkCheckbox(q.question, q.question.id);
                 break;
               default:
                 console.log('Unexpected type of question');
@@ -201,18 +243,18 @@ export default {
       }
     },
     checkInputAndRadioAnsvers(index, r) {
-      const resuls = this.results[index].answer.toLowerCase();
+      const result = this.results[index].answer.toLowerCase();
       const question = this.questions[index].question.answer.toLowerCase();
-      this.showResult(resuls === question, index, r);
+      this.showResult(result === question, index, r);
     },
     checkCheckboxAnsver(index, r) {
-      const resuls = this.results[index].answer;
+      const result = this.results[index].answer;
       const question = this.questions[index].question.answer;
       let res = 0;
       const ans = question.length;
 
-      for (let i = 0; i < resuls.length; i += 1) {
-        if (question.indexOf(resuls[i]) !== -1) {
+      for (let i = 0; i < result.length; i += 1) {
+        if (question.indexOf(result[i]) !== -1) {
           res += 1;
         }
       }
@@ -248,26 +290,26 @@ export default {
         clearInterval(this.interval);
         setTimeout(() => {
           this.timeOnQuestion = 0;
-          // console.log('Hello');
           this.sendResults();
         }, 1000);
       }
     },
     sendResults() {
+      const config = this.setConfig();
       const data = {
-        user: '',
+        user: this.userID,
         test: this.test.id,
         answers: JSON.stringify(this.results),
       };
-      axios.post(`${BASE_API_URL}/results/`, data)
+      axios.post(`${BASE_API_URL}/results/`, data, config)
         .then((response) => {
-          // console.log(response.data);
           this.$router.push(`/results/${response.data.id}`);
         });
     },
   },
   mounted() {
     this.getTest();
+    this.userID = this.$cookies.get('user_id');
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <b-row>
     <b-col>
       <b-jumbotron
-        class="w-75 mx-auto py-3"
+        class="w-100 mx-auto py-3"
         bg-variant="info"
         border-variant="dark">
 
@@ -44,15 +44,26 @@
                   <p class="mb-0" for="answer"><b>Ответы</b></p>
                 </b-col>
                 <b-col>
-                  <div v-for="(check, index) in checks" v-bind:key="index" class="mb-1">
-                    <input v-model="selected" :value="`${check.value}`" type="checkbox">
-                    <input
-                    v-model="check.value"
-                    class="ml-2 w-75"
-                    type="text"
-                    :placeholder="`Введите ответ № ${index + 1}`">
-                  </div>
-                  <p style="color: #eee;"><em>Не забудь выбрать верные варианты</em></p>
+                  <b-row
+                    v-for="(check, index) in checks"
+                    v-bind:key="index"
+                    align-v="center"
+                    class="mb-1">
+                    <b-col cols="1">
+                      <input v-model="selected" :value="`${check.value}`" type="checkbox">
+                    </b-col>
+                    <b-col>
+                      <input
+                        v-model="check.value"
+                        class="w-100"
+                        type="text"
+                        :placeholder="`Введите ответ № ${index + 1}`">
+                    </b-col>
+                  </b-row>
+                  <p
+                    style="color: #eee;">
+                    <em>Не забудь выбрать верные варианты</em>
+                  </p>
                 </b-col>
               </b-row>
 
@@ -77,7 +88,9 @@
                 <b-col cols="2">
                 </b-col>
                 <b-col>
-                  <p v-if="noValid" class="mt-2 novalid">* Заполните поля вопроса и (или) ответа</p>
+                  <p v-if="noValid" class="mt-2 text-light">
+                    * Заполните поля вопроса и (или) ответа
+                  </p>
                 </b-col>
                 <b-col cols="3">
                   <b-button @click="onSubmit" class="ml-auto w-100 mt-2" variant="danger">
@@ -114,6 +127,16 @@ export default {
     };
   },
   methods: {
+    setConfig() {
+      const jwt = this.$cookies.get('jwt_token');
+      const config = {
+        headers: {
+          'X-CSRFToken': this.$cookies.get('csrftoken'),
+          Authorization: `Bearer ${jwt}`,
+        },
+      };
+      return config;
+    },
     addAnswer() {
       this.checks.push({ value: '' });
     },
@@ -145,7 +168,8 @@ export default {
         this.noValid = true;
       } else {
         this.noValid = false;
-        axios.post(`${BASE_URL}/questions/`, this.form)
+        const config = this.setConfig();
+        axios.post(`${BASE_URL}/questions/`, this.form, config)
           .then((response) => {
             if (response.status === 201) {
               this.$emit('created');
@@ -158,14 +182,11 @@ export default {
       this.$refs.loadImg.click();
     },
     loadImgOnServer() {
+      const config = this.setConfig();
+      config.headers['Content-Type'] = 'multipart/form-data';
       const image = this.$refs.loadImg.files[0];
       const data = new FormData();
       data.append('file', image);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
       axios.post(`${BASE_URL}/images/`, data, config)
         .then((response) => {
           this.img = response.data.file;
@@ -178,8 +199,5 @@ export default {
 <style scoped>
 .card-body {
   padding: 0;
-}
-.novalid {
-  color: #C82333;
 }
 </style>

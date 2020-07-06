@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/gotest/:id',
     name: 'GoTest',
-    meta: { title: 'Тестирование', layout: 'main' },
+    meta: { title: 'Тестирование', layout: 'empty' },
     component: () => import('@/views/GoTest.vue'),
   },
   {
@@ -51,6 +51,18 @@ const routes = [
     name: 'Results',
     meta: { title: 'Результаты теста', layout: 'main' },
     component: () => import('@/views/Results.vue'),
+  },
+  {
+    path: '/my-page',
+    name: 'MyPage',
+    meta: { title: 'Кабинет', layout: 'main' },
+    component: () => import('@/views/MyPage.vue'),
+  },
+  {
+    path: '/contact-us',
+    name: 'ContactUs',
+    meta: { title: 'Связаться с нами', layout: 'main' },
+    component: () => import('@/views/ContactUs.vue'),
   },
 ];
 

@@ -8,6 +8,7 @@
 
 <script>
 import MainLayout from '@/layouts/MainLayout.vue';
+import EmptyLayout from '@/layouts/EmptyLayout.vue';
 
 export default {
   name: 'App',
@@ -18,6 +19,7 @@ export default {
   },
   components: {
     MainLayout,
+    EmptyLayout,
   },
 };
 </script>

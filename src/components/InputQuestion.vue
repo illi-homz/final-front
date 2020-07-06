@@ -2,7 +2,7 @@
   <b-row>
     <b-col>
       <b-jumbotron
-        class="w-75 mx-auto py-3"
+        class="w-100 mx-auto py-3"
         bg-variant="info"
         border-variant="dark">
 
@@ -54,7 +54,7 @@
                 <b-col cols="2">
                 </b-col>
                 <b-col>
-                  <p v-if="noValid" class="mt-2 novalid">* Заполните поля вопроса и ответа</p>
+                  <p v-if="noValid" class="mt-2 text-light">* Заполните поля вопроса и ответа</p>
                 </b-col>
                 <b-col cols="3">
                   <b-button @click="onSubmit" class="ml-auto w-100 mt-2" variant="danger">
@@ -87,6 +87,16 @@ export default {
     };
   },
   methods: {
+    setConfig() {
+      const jwt = this.$cookies.get('jwt_token');
+      const config = {
+        headers: {
+          'X-CSRFToken': this.$cookies.get('csrftoken'),
+          Authorization: `Bearer ${jwt}`,
+        },
+      };
+      return config;
+    },
     onSubmit() {
       const formElemenst = this.$refs.form.elements;
       this.form.qtype = 'input';
@@ -98,7 +108,8 @@ export default {
         this.noValid = true;
       } else {
         this.noValid = false;
-        axios.post(`${BASE_URL}/questions/`, this.form)
+        const config = this.setConfig();
+        axios.post(`${BASE_URL}/questions/`, this.form, config)
           .then((response) => {
             if (response.status === 201) {
               this.$emit('created');
@@ -111,14 +122,11 @@ export default {
       this.$refs.loadImg.click();
     },
     loadImgOnServer() {
+      const config = this.setConfig();
+      config.headers['Content-Type'] = 'multipart/form-data';
       const image = this.$refs.loadImg.files[0];
       const data = new FormData();
       data.append('file', image);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
       axios.post(`${BASE_URL}/images/`, data, config)
         .then((response) => {
           console.log(response);
@@ -132,8 +140,5 @@ export default {
 <style scoped>
 .card-body {
   padding: 0;
-}
-.novalid {
-  color: #C82333;
 }
 </style>

@@ -1,40 +1,56 @@
 <template>
   <div class="results">
-    <p v-if="!result"> loading.....</p>
-    <b-jumbotron
-    class="w-75 mx-auto mt-2 py-3"
-    border-variant="dark"
-    v-else>
-      <h1 class="text-center">{{ result.test.title }}</h1>
-      <h4>Время и дата тестирования: {{ result.create_date | formatDateTime }}</h4>
-      <h4>Всего вопросов: <b>{{ result.test.questions.length }}</b></h4>
-      <h4>Полнота ответов: <b>{{
-        (completenessOfAnswers / answeretQuestions.length * 100).toFixed(2)
-        }}%</b></h4>
-      <h4>Всего баллов: <b>{{ totalPrice }}</b></h4>
-      <h4><b>Ваши ответы:</b></h4>
-      <hr>
-      <b-card
-      v-for="(question, index) in fullResults"
-      v-bind:key="index">
-        <p
-          v-if="question.qtype == 'checkbox'"
-          class="m-0 p-0">
-          Вопрос {{ index + 1 }}.
-          <span v-for="(answer, i) in question.answer" v-bind:key="i">
-            (ответ {{ i + 1 }}: <b>{{ answer }}</b>)
-          </span>
-        </p>
-        <p v-else class="m-0 p-0">Вопрос {{ index + 1 }}. {{ question.answer }}</p>
-      </b-card>
-    </b-jumbotron>
+    <b-row>
+      <b-col cols="12" xl="9" class="mx-auto">
+        <p v-if="!result"> loading.....</p>
+        <b-jumbotron
+        class="mt-2 mx-3 py-3"
+        border-variant="dark"
+        v-else>
+          <h1 class="text-center"><b>{{ result.test.title }}</b></h1>
+          <b-row class="mb-2">
+            <b-col cols="2" v-if="result.test.img">
+              <b-img
+                :src="`${result.test.img}`"
+                height="100"
+                rounded
+                fluid
+                alt="Responsive image"></b-img>
+            </b-col>
+            <b-col>
+              <h5>Время и дата тестирования: {{ result.create_date | formatDateTime }}</h5>
+              <h5>Всего вопросов: <b>{{ questionsInTest.length }}</b></h5>
+              <h5>Полнота ответов: <b>{{
+                (completenessOfAnswers / answeretQuestions.length * 100).toFixed(2)
+                }}%</b></h5>
+              <h5>Всего баллов: <b>{{ totalPrice }}</b></h5>
+            </b-col>
+          </b-row>
+          <h5><b>Ваши ответы:</b></h5>
+          <hr>
+          <b-card
+          v-for="(question, index) in fullResults"
+          v-bind:key="index">
+            <p
+              v-if="question.qtype == 'checkbox'"
+              class="m-0 p-0">
+              Вопрос {{ index + 1 }}.
+              <span v-for="(answer, i) in question.answer" v-bind:key="i">
+                (ответ {{ i + 1 }}: <b>{{ answer }}</b>)
+              </span>
+            </p>
+            <p v-else class="m-0 p-0">Вопрос {{ index + 1 }}. {{ question.answer }}</p>
+          </b-card>
+        </b-jumbotron>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8080';
+const BASE_API_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
   name: 'Results',
@@ -44,19 +60,45 @@ export default {
       fullResults: [],
       totalPrice: 0,
       answeretQuestions: null,
-      questionsInTest: null,
+      questionsInTest: [],
       counterCoreectAnswer: 0,
       completenessOfAnswers: 0,
     };
   },
   methods: {
+    setConfig() {
+      const jwt = this.$cookies.get('jwt_token');
+      const config = {
+        headers: {
+          'X-CSRFToken': this.$cookies.get('csrftoken'),
+          Authorization: `Bearer ${jwt}`,
+        },
+      };
+      return config;
+    },
     initial() {
+      const config = this.setConfig();
       const id = `${this.$route.params.id}`;
-      axios.get(`${BASE_API_URL}/results/${id}/`)
+      axios.get(`${BASE_API_URL}/results/${id}/`, config)
         .then((response) => {
           this.result = response.data;
           this.answeretQuestions = JSON.parse(this.result.answers);
-          this.questionsInTest = this.result.test.questions;
+
+          if (this.result.test.groups.length > 0) {
+            for (let i = 0; i < this.result.test.groups.length; i += 1) {
+              const groupInTest = this.result.test.groups[i];
+              for (let j = 0; j < groupInTest.group.questions.length; j += 1) {
+                this.questionsInTest.push({
+                  id: groupInTest.id,
+                  price: groupInTest.price,
+                  question: groupInTest.group.questions[j],
+                });
+              }
+            }
+          } else {
+            this.questionsInTest = this.result.test.questions;
+          }
+
           this.parseAnswerQIT();
           this.addQITtoAnsweretQuestion();
           this.answersControl();
@@ -81,7 +123,7 @@ export default {
       for (let i = 0; i < this.answeretQuestions.length; i += 1) {
         const answQ = this.answeretQuestions[i];
         for (let k = 0; k < this.questionsInTest.length; k += 1) {
-          if (this.questionsInTest[k].id === answQ.question) {
+          if (this.questionsInTest[k].question.id === answQ.question) {
             this.answeretQuestions[i].question = this.questionsInTest[k];
           }
         }
