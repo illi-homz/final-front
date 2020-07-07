@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d226caa"],{e9bb:function(t,n,e){"use strict";e.r(n);var a=function(){var t=this,n=t.$createElement,e=t._self._c||n;return e("div",{staticClass:"to-contact-us m-2"},[e("b-row",[e("b-col",[e("h3",{staticClass:"text-center"},[t._v(t._s(t.title))])])],1)],1)},c=[],s={name:"ContactUs",data:function(){return{title:"Страница находится на стадии разработки"}}},l=s,o=e("2877"),u=Object(o["a"])(l,a,c,!1,null,null,null);n["default"]=u.exports}}]);
+//# sourceMappingURL=chunk-2d226caa.a0c19ee2.js.map
