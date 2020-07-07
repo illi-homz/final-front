@@ -1,7 +1,7 @@
 <template>
   <div class="testlist">
     <b-row>
-      <b-col cols="12" xl="9" class="mx-auto">
+      <b-col cols="11" xl="9" class="mx-auto">
         <div
           class="mt-3"
           v-for="(test, index) in tests"
@@ -50,7 +50,8 @@
 <script>
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8080';
+const BASE_API_URL = process.env.VUE_APP_SERVER_URL;
+// const BASE_API_URL = 'https://testing-gomza-back.herokuapp.com';
 
 export default {
   name: 'TestList',
@@ -67,12 +68,14 @@ export default {
         headers: {
           'X-CSRFToken': this.$cookies.get('csrftoken'),
           Authorization: `Bearer ${jwt}`,
+          // 'Access-Control-Allow-Origin': '*',
         },
       };
       return config;
     },
     getTests() {
       const config = this.setConfig();
+      // console.log(BASE_API_URL, config);
       axios.get(`${BASE_API_URL}/tests/`, config)
         .then((response) => {
           this.tests = response.data;
@@ -81,6 +84,9 @@ export default {
               this.tests[i].questionsCounter = this.countQuestionsInGroups(i);
             }
           }
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     countQuestionsInGroups(testID) {

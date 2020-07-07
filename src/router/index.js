@@ -64,6 +64,24 @@ const routes = [
     meta: { title: 'Связаться с нами', layout: 'main' },
     component: () => import('@/views/ContactUs.vue'),
   },
+  {
+    path: '/edit-test/:id',
+    name: 'EditTest',
+    meta: { title: 'Редактирование теста', layout: 'main' },
+    component: () => import('@/views/EditTest.vue'),
+  },
+  {
+    path: '/questions-list',
+    name: 'QuestionsList',
+    meta: { title: 'Список вопросов', layout: 'main' },
+    component: () => import('@/views/QuestionsList.vue'),
+  },
+  {
+    path: '/group-questions-list',
+    name: 'GroupList',
+    meta: { title: 'Список групп', layout: 'main' },
+    component: () => import('@/views/GroupsList.vue'),
+  },
 ];
 
 const router = new VueRouter({

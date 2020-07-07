@@ -173,7 +173,7 @@ export default {
           .then((response) => {
             if (response.status === 201) {
               this.$emit('created');
-              this.$emit('qClean', 'input');
+              this.$emit('qClean', 'check');
             }
           });
       }

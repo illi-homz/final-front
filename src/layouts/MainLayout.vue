@@ -42,19 +42,29 @@
                 На главную</b-list-group-item>
               <b-list-group-item
                 variant="dark"
-                to="/create-test"
-                v-if="userData.is_staff">
-                Создать тест</b-list-group-item>
-              <b-list-group-item
-                variant="dark"
                 to="/create-question"
                 v-if="userData.is_staff">
-                Создать вопросы</b-list-group-item>
+                Создать вопрос</b-list-group-item>
+              <b-list-group-item
+                variant="dark"
+                to="/questions-list"
+                v-if="userData.is_staff">
+                Список вопросов</b-list-group-item>
               <b-list-group-item
                 variant="dark"
                 to="/create-qroup-questions"
                 v-if="userData.is_staff">
                 Создать группу вопросов</b-list-group-item>
+              <b-list-group-item
+                variant="dark"
+                to="/group-questions-list"
+                v-if="userData.is_staff">
+                Список групп вопросов</b-list-group-item>
+              <b-list-group-item
+                variant="dark"
+                to="/create-test"
+                v-if="userData.is_staff">
+                Создать тест</b-list-group-item>
               <b-list-group-item
                 variant="dark"
                 to="/test-list"
@@ -145,6 +155,7 @@ import axios from 'axios';
 import VueJwtDecode from 'vue-jwt-decode';
 
 const BASE_API_URL = process.env.VUE_APP_SERVER_URL;
+// const BASE_API_URL = 'https://testing-gomza-back.herokuapp.com';
 
 export default {
   name: 'MainLayout',
@@ -212,15 +223,18 @@ export default {
             );
             this.getUserData(this.id, response.data.access);
             this.noLogin = false;
+            this.$router.replace('/');
+
+            // Перезагрузка страницы, чтобы обновить view Home
+            // О vuex узнал поздно, переделывать не стало
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           })
           .catch(() => {
             this.noLogin = true;
           });
       }
-      this.$router.replace('/');
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     },
     logout() {
       this.$bvModal.hide('modal-logout');

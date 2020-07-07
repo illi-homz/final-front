@@ -4,7 +4,7 @@
       <b-row class="mt-2">
         <b-col cols="12" xl="9" class="mx-auto">
 
-          <b-jumbotron class="mx-3">
+          <b-jumbotron>
             <template v-slot:header>Сервис по тестированию</template>
 
             <template v-slot:lead>

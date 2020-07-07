@@ -126,9 +126,6 @@
                 </em>
               </b-col>
               <b-col>
-                <h6 v-if="totalPrice" class="text-center">
-                  Всего баллов за тест: {{ totalPrice }}
-                </h6>
                 <b-row v-for="(git, index) in groupsInTest" v-bind:key="index">
                   <b-col>
                     <b-row align-v="center">
@@ -171,7 +168,7 @@
                       <b-col>
                         <b-row class="px-3">
                           <b-button @click="addGroup" variant="primary">
-                            Добавить вопрос
+                            Добавить группу
                           </b-button>
                           <b-button class="ml-auto" @click="createTest" variant="danger">
                             Создать
@@ -353,15 +350,7 @@ export default {
       return 'hello';
     },
   },
-  computed: {
-    totalPrice() {
-      let total = 0;
-      for (let i = 0; i < this.groupsInTest.length; i += 1) {
-        total += Number(this.groupsInTest[i].price);
-      }
-      return total;
-    },
-  },
+  computed: {},
   mounted() {
     this.getGroupsAndUsers();
   },

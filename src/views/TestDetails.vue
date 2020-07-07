@@ -42,7 +42,7 @@
             class="ml-auto mr-3 w-25"
             variant="success">Пройти</b-button>
           <b-button
-              :to="`/test-details/${test.id}`"
+              :to="`/edit-test/${test.id}`"
               class="mr-3 w-25"
               v-if="userIsStaff"
               variant="danger">Редактировать</b-button>
@@ -55,7 +55,7 @@
 <script>
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8080';
+const BASE_API_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
   name: 'TestDetails',

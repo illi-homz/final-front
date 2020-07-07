@@ -60,8 +60,6 @@
                         :placeholder="`Введите ответ № ${index + 1}`">
                     </b-col>
                   </b-row>
-                  <div v-for="(radio, index) in radios" v-bind:key="index" class="mb-1">
-                  </div>
                 </b-col>
               </b-row>
 
@@ -112,7 +110,7 @@ import axios from 'axios';
 const BASE_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
-  name: 'InputQuestion',
+  name: 'RadioQuestion',
   data() {
     return {
       form: {},
@@ -122,6 +120,7 @@ export default {
       radios: [
         { value: '' },
       ],
+      // radios: [''],
     };
   },
   methods: {
@@ -137,6 +136,7 @@ export default {
     },
     addAnswer() {
       this.radios.push({ value: '' });
+      // this.radios.push('');
     },
     delLastAnswer() {
       this.radios.pop();
@@ -165,7 +165,7 @@ export default {
           .then((response) => {
             if (response.status === 201) {
               this.$emit('created');
-              this.$emit('qClean', 'input');
+              this.$emit('qClean', 'radio');
             }
           });
       }
@@ -181,7 +181,7 @@ export default {
       data.append('file', image);
       axios.post(`${BASE_URL}/images/`, data, config)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           this.img = response.data.file;
         });
     },
@@ -189,8 +189,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.card-body {
-  padding: 0;
-}
+<style>
+
 </style>
